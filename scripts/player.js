@@ -39,9 +39,9 @@ class Human {
     renderBullet() {
         ctx.fillStyle = 'black'
         ctx.fillRect(this.bulletPosX, this.bulletPosY, bulletSize, bulletSize)
-        if (this.shootPos === 'left') this.bulletPosX -= 10
-        if (this.shootPos === 'right') this.bulletPosX += 10
-        if (this.bulletPosX > w) this.isShooting = false
+        if (this.shootPos === 'left') this.bulletPosX -= bulletSpeed
+        if (this.shootPos === 'right') this.bulletPosX += bulletSpeed
+        if (this.bulletPosX >= w || this.bulletPosX < 0) this.isShooting = false
     }
     hitCondion(current) {
         if (this.bulletPosX - current.x <= bulletSize &&
@@ -60,9 +60,22 @@ class Player extends Human {
     constructor(props) {
         super(props)
         this.health = props.health || 3
+        this.condition = props.condition || 'idle'
+        this.conditionState = 0
+        this.animationCount = 0
     }
     init() {
         this.updateHealthBar()
+        console.log(this.conditionState);
+        setInterval(() => {
+            if (this.animationCount < this.conditionState) this.animationCount++
+            else this.animationCount = 0
+        }, 100)
+    }
+    shoot() {
+        this.condition = 'shot'
+        this.animationCount = 0
+        super.shoot()
     }
     updateHealthBar() {
         let healthBar = document.getElementById('healthBar')
@@ -77,8 +90,11 @@ class Player extends Human {
         this.isJumped = true
     }
     render() {
+        this.conditionState = mainHeroSprites[this.pos + '_' + this.condition]?.length - 1
+        // console.log(this.conditionState);
         if (this.health === 0) console.log('death');
-        this.image.src = mainHero[this.pos]
+        const currentImg = mainHeroSprites[this.pos + '_' + this.condition][this.animationCount]
+        this.image = currentImg || mainHeroSprites[this.pos + '_' + this.condition][0]
         if (this.isJumped) this.y -= 10
         this._render()
     }
@@ -94,11 +110,11 @@ class Enemy extends Human {
         if (this.condition === 'shooting')
             this.interval = setInterval(() => this.shoot(), 1000)
     }
-    render() {
-        if (this.condition === 'shooting' && this.hitCondion(sync)) {
-            console.log(sync.health);
-            sync.health -= 1
-            sync.updateHealthBar()
+    render(target) {
+        if (this.condition === 'shooting' && this.hitCondion(target)) {
+            console.log(target.health);
+            target.health -= 1
+            target.updateHealthBar()
         }
         this.image.src = enemyHero[this.pos]
         this._render()
