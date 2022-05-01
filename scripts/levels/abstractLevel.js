@@ -41,20 +41,28 @@ class AbstractLevel {
         ctx.drawImage(this.background, 0, 0, w, h)
         this.setControls()
         this.enemies?.map(enemy => this.mainHero.hitCondion(enemy) && enemy.death())
-        this.mainHero.render()
-        this.enemies.map(enemy => enemy.render({ target: this.mainHero }))
+        this.mainHero.render({ platforms: this.platforms })
+        this.enemies.map(enemy => enemy.render({ target: this.mainHero, platforms: this.platforms }))
         this.platforms.map(platform => platform.render())
         requestAnimationFrame(() => this.animate())
     }
 
     setControls() {
+        const leftPlatformSideCondition = this.platforms.some(platform =>
+            ((platform.x - (this.mainHero.x + this.mainHero.w - 30) === 0)) &&
+            ((this.mainHero.y + this.mainHero.h) - platform.y >= 0) &&
+            (this.mainHero.y - (platform.y + platform.h) <= 0))
+        const rightPlatformSideCondition = this.platforms.some(platform =>
+            ((this.mainHero.x - (platform.x + platform.w - 30)) === 0) &&
+            ((this.mainHero.y + this.mainHero.h) - platform.y >= 0) &&
+            (this.mainHero.y - (platform.y + platform.h) <= 0))
         if (this.keyPressed.keyD) {
-            this.mainHero.x += playerSpeed
+            if (!leftPlatformSideCondition) this.mainHero.x += playerSpeed
             this.mainHero.pos = 'right'
             this.mainHero.condition = 'run'
         }
         if (this.keyPressed.keyA) {
-            this.mainHero.x -= playerSpeed
+            if (!rightPlatformSideCondition) this.mainHero.x -= playerSpeed
             this.mainHero.pos = 'left'
             this.mainHero.condition = 'run'
         }
