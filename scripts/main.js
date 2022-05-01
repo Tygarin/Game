@@ -5,9 +5,13 @@ const h = canvas.height
 const playerSpeed = 5
 const fallSpeed = 3
 const gravity = .2
-const bulletSize = 15
-const bulletSpeed = 15
+const bulletSize = {
+    w: 60,
+    h: 16
+}
+const bulletSpeed = 13
 const paddingBottom = 50
+const jumpPower = 11
 
 const abstractLevel = new AbstractLevel({
     bgImage: 'images/bg.png',
@@ -32,9 +36,8 @@ const abstractLevel = new AbstractLevel({
         },
     ],
     platforms: [
-        { x: 900, y: 200 },
+        { x: 900, y: 400 },
         { x: 600, y: 650 },
-        { x: 500, y: 650 }
     ]
 })
 

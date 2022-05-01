@@ -17,6 +17,8 @@ const mainHeroSprites = {
 }
 
 const enemyHero = {
-    left: 'images/enemyLeft.png',
-    right: 'images/enemyRight.png'
+    left_idle: createNewImage(1, 'images/enemyLeft'),
+    right_idle: createNewImage(1, 'images/enemyRight'),
+    left_dead: createNewImage(13, 'images/enemy_dead/enemy_dead_left/enemy_dead'),
+    right_dead: createNewImage(13, 'images/enemy_dead/enemy_dead_right/enemy_dead'),
 }
