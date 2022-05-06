@@ -1,32 +1,19 @@
-const mainHero = {
-    left: 'images/syncikLeft.png',
-    // [
-    //     'images/suncov_idle_left/suncov_idle1.png',
-    //     'images/suncov_idle_left/suncov_idle2.png',
-    //     'images/suncov_idle_left/suncov_idle3.png',
-    //     'images/suncov_idle_left/suncov_idle4.png',
-    //     'images/suncov_idle_left/suncov_idle5.png',
-    //     'images/suncov_idle_left/suncov_idle6.png',
-    //     'images/suncov_idle_left/suncov_idle7.png',
-    //     'images/suncov_idle_left/suncov_idle8.png',
-    //     'images/suncov_idle_left/suncov_idle9.png',
-    //     'images/suncov_idle_left/suncov_idle10.png',
-    //     'images/suncov_idle_left/suncov_idle11.png',
-    // ],
-    right: 'images/syncikRight.png'
-    // [
-    //     'images/suncov_idle_right/suncov_idle1.png',
-    //     'images/suncov_idle_right/suncov_idle2.png',
-    //     'images/suncov_idle_right/suncov_idle3.png',
-    //     'images/suncov_idle_right/suncov_idle4.png',
-    //     'images/suncov_idle_right/suncov_idle5.png',
-    //     'images/suncov_idle_right/suncov_idle6.png',
-    //     'images/suncov_idle_right/suncov_idle7.png',
-    //     'images/suncov_idle_right/suncov_idle8.png',
-    //     'images/suncov_idle_right/suncov_idle9.png',
-    //     'images/suncov_idle_right/suncov_idle10.png',
-    //     'images/suncov_idle_right/suncov_idle11.png',
-    // ],
+function createNewImage(count, url) {
+    let arr = []
+    for (let i = 0; i < count; i++) {
+        arr.push(new Image())
+        arr[i].src = url + (i + 1) + '.png'
+    }
+    return arr
+}
+
+const mainHeroSprites = {
+    left_idle: createNewImage(11, 'images/suncov_idle_left/suncov_idle'),
+    right_idle: createNewImage(11, 'images/suncov_idle_right/suncov_idle'),
+    left_run: createNewImage(8, 'images/suncov_run_left/suncov_run'),
+    right_run: createNewImage(8, 'images/suncov_run_right/suncov_run'),
+    left_shot: createNewImage(8, 'images/suncov_shot_left/suncov_shot'),
+    right_shot: createNewImage(8, 'images/suncov_shot_right/suncov_shot'),
 }
 
 const enemyHero = {

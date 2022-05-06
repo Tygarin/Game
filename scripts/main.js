@@ -7,17 +7,19 @@ const fallSpeed = 3
 const gravity = .2
 const background = new Image()
 const bulletSize = 15
+const bulletSpeed = 15
 
-const sync = new Player({ x: 30, y: 0, pos: 'right', health: 5 })
+const mainHero = new Player({ x: 30, y: 0, pos: 'right', health: 5 })
 const enemy = new Enemy({ x: 1000, y: 0, botsCondition: 'shooting' })
 const enemy2 = new Enemy({ x: 1200, y: 0, botsCondition: 'shooting' })
-sync.init()
+mainHero.init()
 enemy.init()
 enemy2.init()
 const keyPressed = {
     'keyD': false,
     'keyA': false,
     'keyW': false,
+    'space': false
 }
 function animate() {
     // background.src = 'images/bg.png'
@@ -25,19 +27,22 @@ function animate() {
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, w, h)
     if (keyPressed.keyD) {
-        sync.x += playerSpeed
-        sync.pos = 'right'
+        mainHero.x += playerSpeed
+        mainHero.pos = 'right'
+        mainHero.condition = 'run'
     }
     if (keyPressed.keyA) {
-        sync.x -= playerSpeed
-        sync.pos = 'left'
+        mainHero.x -= playerSpeed
+        mainHero.pos = 'left'
+        mainHero.condition = 'run'
     }
-    if (keyPressed.keyW) sync.jump()
-    if (sync.hitCondion(enemy)) enemy.death()
-    if (sync.hitCondion(enemy2)) enemy2.death()
-    sync.render()
-    enemy.render()
-    enemy2.render()
+    if (!keyPressed.keyD && !keyPressed.keyA && !keyPressed.space) mainHero.condition = 'idle'
+    if (keyPressed.keyW) mainHero.jump()
+    if (mainHero.hitCondion(enemy)) enemy.death()
+    if (mainHero.hitCondion(enemy2)) enemy2.death()
+    mainHero.render()
+    enemy.render(mainHero)
+    enemy2.render(mainHero)
     requestAnimationFrame(animate)
 }
 
@@ -45,7 +50,11 @@ document.addEventListener('keydown', function (e) {
     if (e.code === 'KeyD') keyPressed.keyD = true
     if (e.code === 'KeyA') keyPressed.keyA = true
     if (e.code === 'KeyW') keyPressed.keyW = true
-    if (e.code === 'Space') sync.shoot()
+    if (e.code === 'Space' && !keyPressed.space) {
+        keyPressed.space = true
+        mainHero.shoot()
+        setTimeout(() => keyPressed.space = false, 700)
+    }
 })
 
 document.addEventListener('keyup', function (e) {
