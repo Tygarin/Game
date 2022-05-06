@@ -42,8 +42,8 @@ class AbstractLevel {
         this.setControls()
         this.platforms.map(platform => platform.render())
         this.enemies?.map(enemy => this.mainHero.hitCondion(enemy) && enemy.condition != 'dead' && enemy.death())
-        this.mainHero.render({ platforms: this.platforms })
         this.enemies.map(enemy => enemy.render({ target: this.mainHero, platforms: this.platforms }))
+        this.mainHero.render({ platforms: this.platforms })
         requestAnimationFrame(() => this.animate())
     }
 
