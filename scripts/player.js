@@ -16,9 +16,15 @@ class Human {
     init() {
         return null
     }
-    _render() {
+    render({ platforms }) {
         ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
-        if (h - this.y > this.h) {
+        const currentPlatform = platforms.find(platform =>
+            platform.x + platform.w / 2 - this.x <= platform.w &&
+            platform.x + platform.w / 2 - this.x > 0 && 
+            this.y + this.h - platform.inaccuracy < platform.y)
+
+        const currentTarget = currentPlatform ? h - currentPlatform.y + currentPlatform.inaccuracy : paddingBottom
+        if ((h - this.y > this.h + currentTarget)) {
             this.y += this.fallSpeed
             this.fallSpeed += gravity
         } else {
@@ -92,13 +98,13 @@ class Player extends Human {
     jump() {
         this.isJumped = true
     }
-    render() {
+    render(props) {
         this.conditionState = mainHeroSprites[this.pos + '_' + this.condition]?.length - 1
         if (this.health === 0) console.log('death');
         const currentImg = mainHeroSprites[this.pos + '_' + this.condition][this.animationCount]
         this.image = currentImg || mainHeroSprites[this.pos + '_' + this.condition][0]
         if (this.isJumped) this.y -= 10
-        this._render()
+        super.render(props)
     }
 }
 
@@ -107,20 +113,20 @@ class Enemy extends Human {
         super(props)
         this.condition = props.botsCondition
         this.interval
+        this.w = props.w || 160
         this.init()
     }
     init() {
         if (this.condition === 'shooting')
             this.interval = setInterval(() => this.shoot(), 1000)
     }
-    render({ target }) {
+    render({ target, platforms }) {
         if (this.condition === 'shooting' && this.hitCondion(target)) {
-            // console.log(target.health);
             target.health -= 1
             target.updateHealthBar()
         }
         this.image.src = enemyHero[this.pos]
-        this._render()
+        super.render({ platforms })
     }
     death() {
         clearInterval(this.interval)
