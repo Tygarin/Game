@@ -17,5 +17,6 @@ const mainHeroSprites = {
 }
 
 const enemyHero = {
-    left: 'images/enemy.png'
+    left: 'images/enemyLeft.png',
+    right: 'images/enemyRight.png'
 }

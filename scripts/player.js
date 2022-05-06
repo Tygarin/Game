@@ -13,9 +13,12 @@ class Human {
         this.bulletPosY = 0
         this.shootPos = ''
     }
+    init() {
+        return null
+    }
     _render() {
         ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
-        if (h - this.y >= this.h) {
+        if (h - this.y > this.h) {
             this.y += this.fallSpeed
             this.fallSpeed += gravity
         } else {
@@ -63,10 +66,10 @@ class Player extends Human {
         this.condition = props.condition || 'idle'
         this.conditionState = 0
         this.animationCount = 0
+        this.init()
     }
     init() {
         this.updateHealthBar()
-        console.log(this.conditionState);
         setInterval(() => {
             if (this.animationCount < this.conditionState) this.animationCount++
             else this.animationCount = 0
@@ -91,7 +94,6 @@ class Player extends Human {
     }
     render() {
         this.conditionState = mainHeroSprites[this.pos + '_' + this.condition]?.length - 1
-        // console.log(this.conditionState);
         if (this.health === 0) console.log('death');
         const currentImg = mainHeroSprites[this.pos + '_' + this.condition][this.animationCount]
         this.image = currentImg || mainHeroSprites[this.pos + '_' + this.condition][0]
@@ -105,14 +107,15 @@ class Enemy extends Human {
         super(props)
         this.condition = props.botsCondition
         this.interval
+        this.init()
     }
     init() {
         if (this.condition === 'shooting')
             this.interval = setInterval(() => this.shoot(), 1000)
     }
-    render(target) {
+    render({ target }) {
         if (this.condition === 'shooting' && this.hitCondion(target)) {
-            console.log(target.health);
+            // console.log(target.health);
             target.health -= 1
             target.updateHealthBar()
         }
