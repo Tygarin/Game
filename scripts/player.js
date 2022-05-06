@@ -63,10 +63,10 @@ class Human {
         if (this.bulletPosX >= w || this.bulletPosX < 0) this.isShooting = false
     }
     hitCondion(current) {
-        if (this.bulletPosX - current.x <= bulletSize.h &&
-            this.bulletPosX - current.x > 0 &&
-            this.bulletPosY - current.y <= current.h &&
-            this.bulletPosY - current.y > 0 &&
+        if (this.bulletPosX < current.x + current.w &&
+            this.bulletPosX + bulletSize.w > current.x &&
+            this.bulletPosY < current.y + current.h &&
+            this.bulletPosY + bulletSize.h > current.y &&
             this.isShooting) {
             this.isShooting = false
             return true
@@ -116,10 +116,11 @@ class Enemy extends Human {
         this.w = props.w || 160
         this.condition = 'idle'
         this.init()
+        this.dead = false
     }
     init() {
         if (this.botsCondition === 'shooting')
-            this.interval = setInterval(() => this.shoot(), 1000)
+            this.interval = setInterval(() => this.shoot(), 600)
         super.init()
     }
     shoot() {
@@ -144,9 +145,9 @@ class Enemy extends Human {
         this.animationInterval = setInterval(() => {
             if (this.animationCount === enemyHeroSprites[this.pos + '_' + this.condition].length - 2) {
                 clearInterval(this.animationInterval)
+                this.dead = true
                 this.w = 0
                 this.h = 0
-                console.log(AbstractLevel.enemies);
             }
             const currentImg = enemyHeroSprites[this.pos + '_' + this.condition][this.animationCount]
             this.image = currentImg

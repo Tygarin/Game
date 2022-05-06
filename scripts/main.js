@@ -18,21 +18,9 @@ const abstractLevel = new AbstractLevel({
     mainHeroSettings: { x: 30, y: 0, pos: 'right', health: 5 },
     enemySettings: [
         {
-            x: 1000,
-            y: 0,
-            botsCondition: 'shooting',
-        },
-        {
             x: 1200,
             y: 0,
             botsCondition: 'shooting',
-            pos: 'right',
-        },
-        {
-            x: 900,
-            y: 0,
-            botsCondition: 'shooting',
-            pos: 'right',
         },
     ],
     platforms: [
