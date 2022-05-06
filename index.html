@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style/style.css" />
     <title>Document</title>
-</head>
+  </head>
 
-<body>
-    <div style='display:flex; justify-content: center; align-items: center; height: 100vh'>
-        <div class="box">
-            <div id="healthBar" class="healthBar">
-            </div>
-            <canvas id="canvas" style="border: 2px solid black;" width="1600px" height="800px"></canvas>
-        </div>
+  <body>
+    <div
+      class="fullScreen"
+      style="justify-content: center; align-items: center"
+    >
+      <div class="box" style="height: 100vh">
+        <div id="healthBar" class="healthBar"></div>
+        <canvas id="canvas" style="border: 2px solid black"></canvas>
+      </div>
     </div>
     <script src="scripts/sprites.js"></script>
     <script src="scripts/player.js"></script>
     <script src="scripts/platform.js"></script>
     <script src="scripts/levels/abstractLevel.js"></script>
     <script src="scripts/main.js"></script>
-</body>
-
+  </body>
 </html>

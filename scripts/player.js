@@ -21,11 +21,11 @@ class Human {
     }
     render({ platforms }) {
         ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
-        const currentPlatform = platforms.find(platform => 
-                this.x + this.w / 1.5 >= platform.x &&
-                this.x + this.w / 2.5 <= platform.x + platform.w &&
-                this.y + this.h - platform.inaccuracy < platform.y
-            )
+        const currentPlatform = platforms.find(platform =>
+            this.x + this.w / 1.5 >= platform.x &&
+            this.x + this.w / 2.5 <= platform.x + platform.w &&
+            this.y + this.h - platform.inaccuracy < platform.y
+        )
         const currentTarget = currentPlatform ? h - currentPlatform.y + currentPlatform.inaccuracy : paddingBottom
         if ((h - this.y > this.h + currentTarget)) {
             this.y += this.fallSpeed

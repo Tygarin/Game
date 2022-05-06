@@ -1,5 +1,7 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
+canvas.width = document.body.clientWidth
+canvas.height = document.body.clientHeight
 const w = canvas.width
 const h = canvas.height
 const playerSpeed = 5
