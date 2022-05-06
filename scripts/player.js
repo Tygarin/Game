@@ -15,17 +15,21 @@ class Human {
         this.animationCount = 0
         this.conditionState = 0
         this.bulletImg = new Image()
+        this.animationInterval
     }
     init() {
-        return null
+        this.animationInterval = setInterval(() => {
+            if (this.animationCount < this.conditionState) this.animationCount++
+            else this.animationCount = 0
+        }, 100)
     }
     render({ platforms }) {
         ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
-        const currentPlatform = platforms.find(platform => 
-                this.x + this.w / 1.5 >= platform.x &&
-                this.x + this.w / 2.5 <= platform.x + platform.w &&
-                this.y + this.h - platform.inaccuracy < platform.y
-            )
+        const currentPlatform = platforms.find(platform =>
+            this.x + this.w / 1.5 >= platform.x &&
+            this.x + this.w / 2.5 <= platform.x + platform.w &&
+            this.y + this.h - platform.inaccuracy < platform.y
+        )
         const currentTarget = currentPlatform ? h - currentPlatform.y + currentPlatform.inaccuracy : paddingBottom
         if ((h - this.y > this.h + currentTarget)) {
             this.y += this.fallSpeed
@@ -40,6 +44,8 @@ class Human {
         }
     }
     shoot() {
+        this.condition = 'shot'
+        this.animationCount = 0
         this.isShooting = true
 
         if (this.pos === 'right') this.bulletPosX = this.x + this.w - 40
@@ -78,15 +84,7 @@ class Player extends Human {
     }
     init() {
         this.updateHealthBar()
-        setInterval(() => {
-            if (this.animationCount < this.conditionState) this.animationCount++
-            else this.animationCount = 0
-        }, 100)
-    }
-    shoot() {
-        this.condition = 'shot'
-        this.animationCount = 0
-        super.shoot()
+        super.init()
     }
     updateHealthBar() {
         let healthBar = document.getElementById('healthBar')
@@ -115,33 +113,40 @@ class Enemy extends Human {
         super(props)
         this.botsCondition = props.botsCondition
         this.interval
-        this.animationInterval
         this.w = props.w || 160
         this.condition = 'idle'
         this.init()
     }
     init() {
         if (this.botsCondition === 'shooting')
-            this.interval = setInterval(() => this.shoot(), 1000)
+            this.interval = setInterval(() => this.shoot(), 10000)
+        super.init()
+    }
+    shoot() {
+        super.shoot()
+        setTimeout(() => this.condition = 'idle', 500)
     }
     render({ target, platforms }) {
+        this.conditionState = enemyHeroSprites[this.pos + '_' + this.condition]?.length - 1
         if (this.botsCondition === 'shooting' && this.hitCondion(target)) {
             target.health -= 1
             target.updateHealthBar()
         }
-        this.image = enemyHero[this.pos + '_' + this.condition][this.animationCount]
+        this.image = enemyHeroSprites[this.pos + '_' + this.condition][this.animationCount]
         super.render({ platforms })
     }
     death() {
         this.condition = 'dead'
+        clearInterval(this.animationInterval)
+        this.animationCount = 0
         this.animationInterval = setInterval(() => {
-            if (this.animationCount === enemyHero[this.pos + '_' + this.condition].length - 2) {
+            if (this.animationCount === enemyHeroSprites[this.pos + '_' + this.condition].length - 2) {
                 clearInterval(this.animationInterval)
                 this.w = 0
                 this.h = 0
             }
-            const currentImg = enemyHero[this.pos + '_' + this.condition][this.animationCount]
-            this.image = currentImg || enemyHero[this.pos + '_' + this.condition][this.animationCount]
+            const currentImg = enemyHeroSprites[this.pos + '_' + this.condition][this.animationCount]
+            this.image = currentImg
             this.animationCount++
         }, 100)
         clearInterval(this.interval)

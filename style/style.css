@@ -4,9 +4,13 @@
 }
 .healthPoint {
     height: 35px;
-    width: 35px;
-    background-color: rgb(52, 181, 52);
-    border: 3px solid black;
+    width: 40px;
+    background: url('../images/heart.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* background-color: rgb(52, 181, 52); */
+    /* border: 3px solid black; */
 }
 
 .box {
