@@ -119,12 +119,14 @@ class Enemy extends Human {
     }
     init() {
         if (this.botsCondition === 'shooting')
-            this.interval = setInterval(() => this.shoot(), 10000)
+            this.interval = setInterval(() => this.shoot(), 1000)
         super.init()
     }
     shoot() {
         super.shoot()
-        setTimeout(() => this.condition = 'idle', 500)
+        setTimeout(() => {
+            if(this.condition !== 'dead') this.condition = 'idle'
+        }, 500)
     }
     render({ target, platforms }) {
         this.conditionState = enemyHeroSprites[this.pos + '_' + this.condition]?.length - 1
@@ -144,6 +146,7 @@ class Enemy extends Human {
                 clearInterval(this.animationInterval)
                 this.w = 0
                 this.h = 0
+                console.log(AbstractLevel.enemies);
             }
             const currentImg = enemyHeroSprites[this.pos + '_' + this.condition][this.animationCount]
             this.image = currentImg
