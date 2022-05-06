@@ -1,5 +1,5 @@
 class Platform {
-    constructor({ x = 0, y = 0, w = 200, h = 100, img = 'images/platform.png', inaccuracy = 5 }) {
+    constructor({ x = 0, y = 0, w = 200, h = 200, img = 'images/platform.png', inaccuracy = 5 }) {
         this.x = x
         this.y = y
         this.w = w

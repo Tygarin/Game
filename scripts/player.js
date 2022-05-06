@@ -12,6 +12,9 @@ class Human {
         this.bulletPosX = 0
         this.bulletPosY = 0
         this.shootPos = ''
+        this.animationCount = 0
+        this.conditionState = 0
+        this.bulletImg = new Image()
     }
     init() {
         return null
@@ -20,7 +23,7 @@ class Human {
         ctx.drawImage(this.image, this.x, this.y, this.w, this.h)
         const currentPlatform = platforms.find(platform =>
             platform.x + platform.w / 2 - this.x <= platform.w &&
-            platform.x + platform.w / 2 - this.x > 0 && 
+            platform.x + platform.w / 2 - this.x > 0 &&
             this.y + this.h - platform.inaccuracy < platform.y)
 
         const currentTarget = currentPlatform ? h - currentPlatform.y + currentPlatform.inaccuracy : paddingBottom
@@ -46,14 +49,15 @@ class Human {
         this.shootPos = this.pos
     }
     renderBullet() {
+        this.bulletImg.src = 'images/bullet/bullet_' + this.shootPos + '.png'
+        ctx.drawImage(this.bulletImg, this.bulletPosX, this.bulletPosY, bulletSize.w, bulletSize.h)
         ctx.fillStyle = 'black'
-        ctx.fillRect(this.bulletPosX, this.bulletPosY, bulletSize, bulletSize)
         if (this.shootPos === 'left') this.bulletPosX -= bulletSpeed
         if (this.shootPos === 'right') this.bulletPosX += bulletSpeed
         if (this.bulletPosX >= w || this.bulletPosX < 0) this.isShooting = false
     }
     hitCondion(current) {
-        if (this.bulletPosX - current.x <= bulletSize &&
+        if (this.bulletPosX - current.x <= bulletSize.h &&
             this.bulletPosX - current.x > 0 &&
             this.bulletPosY - current.y <= current.h &&
             this.bulletPosY - current.y > 0 &&
@@ -70,8 +74,6 @@ class Player extends Human {
         super(props)
         this.health = props.health || 3
         this.condition = props.condition || 'idle'
-        this.conditionState = 0
-        this.animationCount = 0
         this.init()
     }
     init() {
@@ -103,7 +105,7 @@ class Player extends Human {
         if (this.health === 0) console.log('death');
         const currentImg = mainHeroSprites[this.pos + '_' + this.condition][this.animationCount]
         this.image = currentImg || mainHeroSprites[this.pos + '_' + this.condition][0]
-        if (this.isJumped) this.y -= 10
+        if (this.isJumped) this.y -= jumpPower
         super.render(props)
     }
 }
@@ -111,26 +113,37 @@ class Player extends Human {
 class Enemy extends Human {
     constructor(props) {
         super(props)
-        this.condition = props.botsCondition
+        this.botsCondition = props.botsCondition
         this.interval
+        this.animationInterval
         this.w = props.w || 160
+        this.condition = 'idle'
         this.init()
     }
     init() {
-        if (this.condition === 'shooting')
+        if (this.botsCondition === 'shooting')
             this.interval = setInterval(() => this.shoot(), 1000)
     }
     render({ target, platforms }) {
-        if (this.condition === 'shooting' && this.hitCondion(target)) {
+        if (this.botsCondition === 'shooting' && this.hitCondion(target)) {
             target.health -= 1
             target.updateHealthBar()
         }
-        this.image.src = enemyHero[this.pos]
+        this.image = enemyHero[this.pos + '_' + this.condition][this.animationCount]
         super.render({ platforms })
     }
     death() {
+        this.condition = 'dead'
+        this.animationInterval = setInterval(() => {
+            if (this.animationCount === enemyHero[this.pos + '_' + this.condition].length - 2) {
+                clearInterval(this.animationInterval)
+                this.w = 0
+                this.h = 0
+            }
+            const currentImg = enemyHero[this.pos + '_' + this.condition][this.animationCount]
+            this.image = currentImg || enemyHero[this.pos + '_' + this.condition][this.animationCount]
+            this.animationCount++
+        }, 100)
         clearInterval(this.interval)
-        this.w = 0
-        this.h = 0
     }
 }
