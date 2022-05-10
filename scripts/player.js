@@ -69,6 +69,7 @@ class Human {
             this.bulletPosY + bulletSize.h > current.y &&
             this.isShooting) {
             this.isShooting = false
+            console.log('ssss');
             return true
         }
         return false
@@ -146,6 +147,8 @@ class Enemy extends Human {
             if (this.animationCount === enemyHeroSprites[this.pos + '_' + this.condition].length - 2) {
                 clearInterval(this.animationInterval)
                 this.dead = true
+                this.x = 0
+                this.y = 0
                 this.w = 0
                 this.h = 0
             }
